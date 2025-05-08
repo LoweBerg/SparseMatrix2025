@@ -47,5 +47,6 @@ class SparseMatrix:
                 self._row_index = np.concat(self._col_index[:index], self._col_index[index+1:])
 
         elif not in_matrix and a != 0:
-            pass
+            self._number_of_nonzero += 1
+            self._V = np.concat(self._V[:index], a, self._V[index:])
 
