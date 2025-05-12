@@ -5,6 +5,18 @@ import numpy as np
 class SparseMatrix:
 
     def __init__(self, arr: np.ndarray):  # Sparsify matrix
+        """
+        Generates a Sparse Matrix using the Compressed Sparse Row (CSR) format
+        with the following properties: \n
+        V: Values of nonzero elements in matrix. \n
+        col_index: Column indices for each nonzero element in matrix. \n
+        row_counter: Number of nonzero elements in a row such that row i contains
+        row_counter[i+1] - row_counter[i] elements (0-indexed). \n
+        number_of_nonzero: Total number of nonzero elements in matrix. \n
+        intern_represent: Sparse matrix compression format.
+
+        :param arr: Numpy sparse matrix to be compressed
+        """
         temp_V = []
         temp_col_index = []
         temp_row_counter = [0]
@@ -61,4 +73,5 @@ class SparseMatrix:
         elif not in_matrix and a != 0:
             self._number_of_nonzero += 1
             self._V = np.concat(self._V[:index], a, self._V[index:])
+
 
