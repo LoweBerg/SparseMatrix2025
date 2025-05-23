@@ -37,14 +37,32 @@ E = np.array([[1e-8, 1e-8, 1e-8, 1e-8, 1],
               [0, 0, 3, 0, 0],
               [0, 6, 0, 0, 1]])
 
+F = np.array([[0, 0, 3],
+              [4, 0, 0],
+              [0, 6, 6]])
+
+G = np.array([[0, 0, 3],
+              [4, 0, 0],
+              [0, 6, 6]])
+
 SA = Sparse.SparseMatrix(A)
 SB = Sparse.SparseMatrix(B)
 SC = Sparse.SparseMatrix(C)
 SD = Sparse.SparseMatrix(D)
 SE = Sparse.SparseMatrix(E)
+SF = Sparse.SparseMatrix(F)
+SG = Sparse.SparseMatrix(G)
 
 print(SA)
 print(SB)
 print(SC)
 print(SD)
 print(SE)
+
+#Test task 7
+
+slowsum = F + G
+fastsum = SF + SG
+
+print("Slow sum: \n", slowsum) #output is good
+print("Fast sum: \n", fastsum) #output is good
