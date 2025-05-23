@@ -90,8 +90,8 @@ class SparseMatrix:
             row_start_other = other._row_counter[i]
             row_end_other = other._row_counter[i + 1]
             
-            row_self = {sel.col_index[i]: self._V[i] for i in range(row_start_self, row_end_self)}
-            row_other = {other.col_index[i]: other._V[i] for i in range(row_start_other, row_end_other)}
+            row_self = {self._col_index[i]: self._V[i] for i in range(row_start_self, row_end_self)}
+            row_other = {other._col_index[i]: other._V[i] for i in range(row_start_other, row_end_other)}
             
             row_sum = {}
             for j in row_self:
@@ -105,7 +105,7 @@ class SparseMatrix:
                 if abs(row_sum[j]) > tol:
                     sum_V.append(row_sum[j])
                     sum_col_index.append(j)
-            sum_row_counter.append(sum_V)
+            sum_row_counter.append(len(sum_V))
         
         sum = SparseMatrix(np.zeros((self._shape[0], self._shape[1])))
         sum._V = np.array(sum_V)
