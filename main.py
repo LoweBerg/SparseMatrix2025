@@ -32,12 +32,19 @@ D = np.array([[0, 0, 0, 0, 1],
               [0, 0, 3, 0, 0],
               [0, 6, 0, 0, 1]])
 
+E = np.array([[1e-8, 1e-8, 1e-8, 1e-8, 1],
+              [5, 8, 1e-8, 1e-8, 0],
+              [0, 0, 3, 0, 0],
+              [0, 6, 0, 0, 1]])
+
 SA = Sparse.SparseMatrix(A)
 SB = Sparse.SparseMatrix(B)
 SC = Sparse.SparseMatrix(C)
 SD = Sparse.SparseMatrix(D)
+SE = Sparse.SparseMatrix(E)
 
 print(SA)
 print(SB)
 print(SC)
 print(SD)
+print(SE)
