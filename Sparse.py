@@ -57,6 +57,26 @@ class SparseMatrix:
             """
                )
 
+    @property
+    def number_of_nonzero(self):
+        return self._number_of_nonzero
+
+    @property
+    def V(self):
+        return self._V
+
+    @property
+    def col_index(self):
+        return self._col_index
+
+    @property
+    def row_counter(self):
+        return self._row_counter
+
+    @property
+    def intern_represent(self):
+        return self._intern_represent
+
     def edit(self, a, x, y):  # Will not work yet
         in_matrix = False
         index = None
