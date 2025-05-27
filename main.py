@@ -53,16 +53,29 @@ SE = Sparse.SparseMatrix(E)
 SF = Sparse.SparseMatrix(F)
 SG = Sparse.SparseMatrix(G)
 
+# Test task 1
+print("----- Test task 1 -----")
 print(SA)
 print(SB)
 print(SC)
 print(SD)
 print(SE)
 
-#Test task 7
+# Test task 7
+print("----- Test task 7 -----")
 
 slowsum = F + G
 fastsum = SF + SG
 
 print("Slow sum: \n", slowsum) #output is good
 print("Fast sum: \n", fastsum) #output is good
+
+# Test task 9
+print("----- Test task 9 -----")
+for i in range(1, 5):
+    print("Slow toeplitz-----------------")
+    SA = Sparse.SparseMatrix.manual_toeplitz(i)
+    print(SA)
+    print("Fast toeplitz-------------")
+    SA = Sparse.SparseMatrix.toeplitz(i)
+    print(SA)

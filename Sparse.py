@@ -29,6 +29,7 @@ class SparseMatrix:
             self._number_of_nonzero = temp_number_of_nonzero
             self._intern_represent = 'CSR'
             self._shape = np.array([0, 0])
+            return
 
         for i in range(arr.shape[0]):
             for j in range(arr.shape[1]):
@@ -48,12 +49,12 @@ class SparseMatrix:
 
     def __repr__(self):
         return(
-                f"""
-                NNZ: {self._number_of_nonzero}
-                Values: {self._V}
-                Row Counter: {self._row_counter}
-                Columns: {self._col_index}
-                """
+            f"""
+            NNZ: {self._number_of_nonzero}
+            Values: {self._V}
+            Columns: {self._col_index}
+            Row Counter: {self._row_counter}
+            """
                )
 
     def edit(self, a, x, y):  # Will not work yet
@@ -125,13 +126,14 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
 
-    @classmethod
-    def toeplitz(cls, n: int):
+    @staticmethod
+    def manual_toeplitz(n: int):
         if n < 0:
             raise ValueError("Number of rows must be a positive integer!")
 
-        if n == 1:
-            result = SparseMatrix()
+        result = SparseMatrix()  # Create empty object to fill and return
+
+        if n == 1:  # Trivial case
             result._V = np.array([2])
             result._col_index = np.array([0])
             result._row_counter = np.array([0, 1])
@@ -139,6 +141,8 @@ class SparseMatrix:
             result._intern_represent = 'CSR'
             result._shape = np.array([1, 1])
             return result
+
+        # Cases where n > 1 are generated procedurally
 
         temp_V = []
         temp_col_index = []
@@ -149,21 +153,63 @@ class SparseMatrix:
         spine = [-1, 2, -1]
         tail = [-1, 2]
 
+        columnpointer = 0
+
+        # Create head of matrix
         temp_number_of_nonzero += 2
-        temp_V.append(head)
-        temp_col_index.append([0, 1])
+        temp_V += head
+        temp_col_index += [columnpointer, columnpointer + 1]
         temp_row_counter.append(temp_number_of_nonzero)
 
-        columnpointer = 0
-        for i in range(0, n-2):
+        for i in range(0, n-2):  # Create spine of matrix
             temp_number_of_nonzero += 3
-            temp_V.append(spine)
-            temp_col_index.append([columnpointer, columnpointer+1, columnpointer+2])
+            temp_V += spine
+            temp_col_index += [columnpointer, columnpointer+1, columnpointer+2]
             temp_row_counter.append(temp_number_of_nonzero)
             columnpointer += 1
 
+        # Create tail of matrix
         temp_number_of_nonzero += 2
-        temp_V.append(tail)
-        temp_col_index.append([columnpointer, columnpointer+1])
+        temp_V += tail
+        temp_col_index += [columnpointer, columnpointer+1]
         temp_row_counter.append(temp_number_of_nonzero)
+
+        result._V = np.array(temp_V)
+        result._col_index = np.array(temp_col_index)
+        result._row_counter = np.array(temp_row_counter)
+        result._number_of_nonzero = np.array(temp_number_of_nonzero)
+        result._intern_represent = 'CSR'
+        result._shape = np.array([n, n])
+        return result
+
+    @staticmethod
+    def toeplitz(n: int):  # alternative solution
+        if n < 0:
+            raise ValueError("Number of rows must be a positive integer!")
+
+        result = SparseMatrix()  # Create empty object to fill and return
+
+        if n == 1:  # Trivial but strange case
+            result._V = np.array([2])
+            result._col_index = np.array([0])
+            result._row_counter = np.array([0, 1])
+            result._number_of_nonzero = 1
+            result._intern_represent = 'CSR'
+            result._shape = np.array([1, 1])
+            return result
+
+        # Freaky generation method
+        temp_V = [2] + [-1, -1, 2] * (n-1)
+        temp_col_index = [0] + [x for xs in ([i+1, i, i+1] for i in range(n-1)) for x in xs]
+        temp_row_counter = [0] + [2+3*i for i in range(n-1)] + [4+3*(n-2)]
+        temp_number_of_nonzero = temp_row_counter[-1]
+
+        result._V = np.array(temp_V)
+        result._col_index = np.array(temp_col_index)
+        result._row_counter = np.array(temp_row_counter)
+        result._number_of_nonzero = np.array(temp_number_of_nonzero)
+        result._intern_represent = 'CSR'
+        result._shape = np.array([n, n])
+        return result
+
 
