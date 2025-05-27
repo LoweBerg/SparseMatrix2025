@@ -2,8 +2,9 @@
 import numpy as np
 tol = 1e-8  # Tolerance for zero values in the matrix
 
+
 class SparseMatrix:
-    def __init__(self, arr: np.ndarray):  # Sparsify matrix
+    def __init__(self, arr: np.ndarray = None):  # Sparsify matrix
         """
         Generates a Sparse Matrix using the Compressed Sparse Row (CSR) format
         with the following properties: \n
@@ -20,6 +21,14 @@ class SparseMatrix:
         temp_col_index = []
         temp_row_counter = [0]
         temp_number_of_nonzero = 0  # can be further simplified later
+
+        if arr is None:  # Create empty object
+            self._V = np.array(temp_V)
+            self._col_index = np.array(temp_col_index)
+            self._row_counter = np.array(temp_row_counter)
+            self._number_of_nonzero = temp_number_of_nonzero
+            self._intern_represent = 'CSR'
+            self._shape = np.array([0, 0])
 
         for i in range(arr.shape[0]):
             for j in range(arr.shape[1]):
@@ -116,5 +125,45 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
 
+    @classmethod
+    def toeplitz(cls, n: int):
+        if n < 0:
+            raise ValueError("Number of rows must be a positive integer!")
 
+        if n == 1:
+            result = SparseMatrix()
+            result._V = np.array([2])
+            result._col_index = np.array([0])
+            result._row_counter = np.array([0, 1])
+            result._number_of_nonzero = 1
+            result._intern_represent = 'CSR'
+            result._shape = np.array([1, 1])
+            return result
+
+        temp_V = []
+        temp_col_index = []
+        temp_row_counter = [0]
+        temp_number_of_nonzero = 0
+
+        head = [2, -1]
+        spine = [-1, 2, -1]
+        tail = [-1, 2]
+
+        temp_number_of_nonzero += 2
+        temp_V.append(head)
+        temp_col_index.append([0, 1])
+        temp_row_counter.append(temp_number_of_nonzero)
+
+        columnpointer = 0
+        for i in range(0, n-2):
+            temp_number_of_nonzero += 3
+            temp_V.append(spine)
+            temp_col_index.append([columnpointer, columnpointer+1, columnpointer+2])
+            temp_row_counter.append(temp_number_of_nonzero)
+            columnpointer += 1
+
+        temp_number_of_nonzero += 2
+        temp_V.append(tail)
+        temp_col_index.append([columnpointer, columnpointer+1])
+        temp_row_counter.append(temp_number_of_nonzero)
 
