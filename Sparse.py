@@ -126,6 +126,62 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
 
+    def edit(self, x, i, j):
+        isOccupied = False
+        nonZero = False
+        row_start  = self._row_counter[i]
+        row_end  = self._row_counter[i+1]
+        V = self._V
+        Col = self._col_index
+        Row = self._row_counter
+        
+
+        if abs(x) > tol:
+            nonZero = True
+
+        if j in self._col_index[row_start:row_end]:
+            isOccupied  = True
+        
+        if isOccupied and nonZero:
+            self._V[j] = x
+            
+        elif not isOccupied and nonZero:
+            workCol = Col[row_start:row_end]
+            workV = V[row_start:row_end]
+            
+            if (j > max(workCol)) or (workCol.size == 0):
+                np.append(workCol, j)
+                np.append(workV, x)
+            else:
+                n = 0
+                while j > workCol[n]:
+                    n += 1
+                np.insert(workCol, n, j)
+                np.insert(workV, n, x)
+            
+            for a in range(i, len(Row)):
+                Row[a] += 1
+                
+            self._col_index = np.concatenate(Col[0:row_start], workCol, Col[row_end:-1])
+            self._V = np.concatenate(V[0:row_start], workV, V[row_end:-1])
+            self._row_counter = Row
+            self._number_of_nonzero += 1
+        
+        elif isOccupied and not nonZero:
+            workCol = Col[row_start:row_end]
+            workV = V[row_start:row_end]
+            np.delete(workCol, j)
+            np.delete(workV, j)
+            for a in range(i, len(Row)):
+                Row[a] -= 1
+            self._col_index = np.concatenate(Col[0:row_start], workCol, Col[row_end:-1])
+            self._V = np.concatenate(V[0:row_start], workV, V[row_end:-1])
+            self._row_counter = Row
+            self._number_of_nonzero += 1
+            
+        else:
+            #nothing :-)
+
     @staticmethod
     def manual_toeplitz(n: int):
         if n < 0:
