@@ -14,6 +14,7 @@ class SparseMatrix:
         row_counter[i+1] - row_counter[i] elements (0-indexed). \n
         number_of_nonzero: Total number of nonzero elements in matrix. \n
         intern_represent: Sparse matrix compression format.
+        shape: shape of the uncompressed matrix
 
         :param arr: Numpy sparse matrix to be compressed
         """
@@ -45,7 +46,7 @@ class SparseMatrix:
         self._row_counter = np.array(temp_row_counter)
         self._number_of_nonzero = temp_number_of_nonzero
         self._intern_represent = 'CSR'
-        self._shape = arr.shape # jag lade till denna /RS
+        self._shape = arr.shape  # jag lade till denna /RS
 
     def __repr__(self):
         return(
@@ -76,38 +77,11 @@ class SparseMatrix:
     @property
     def intern_represent(self):
         return self._intern_represent
-
-    def edit(self, a, x, y):  # Will not work yet
-        in_matrix = False
-        index = None
-        for i in range(np.size(self._col_index)):  # Check if indices exist in matrix
-            index = i
-            if (self._col_index[i], self._row_counter[i]) == (x, y):
-                in_matrix = True
-                break
-
-            if self._col_index[i] > x or (self._col_index[i] == x and self._row_counter[i] > y):
-                break
-
-        if in_matrix:
-            if a != 0:  # simple edit
-                self._V[index] = a
-                self._col_index[index] = x
-                self._row_counter[index] = y
-            else:  # remove from matrix
-                self._number_of_nonzero -= 1
-                self._V = np.concat(self._V[:index], self._V[index+1:])
-                self._col_index = np.concat(self._col_index[:index], self._col_index[index+1:])
-                self._row_counter = np.concat(self._col_index[:index], self._col_index[index + 1:])
-
-        elif not in_matrix and a != 0:
-            self._number_of_nonzero += 1
-            self._V = np.concat(self._V[:index], a, self._V[index:])
     
     def __add__(self, other):
-        if self._intern_represent != other._intern_represent:
+        if self._intern_represent != other.intern_represent:
             raise ValueError("Cannot add matrices with different representations")
-        if self._shape != other._shape:
+        if self._shape != other.shape:
             raise ValueError("Cannot add matrices with different dimensions")
         
         sum_V = []
@@ -117,11 +91,11 @@ class SparseMatrix:
         for i in range(self._shape[0]):
             row_start_self = self._row_counter[i]
             row_end_self = self._row_counter[i + 1]
-            row_start_other = other._row_counter[i]
-            row_end_other = other._row_counter[i + 1]
+            row_start_other = other.row_counter[i]
+            row_end_other = other.row_counter[i + 1]
             
             row_self = {self._col_index[i]: self._V[i] for i in range(row_start_self, row_end_self)}
-            row_other = {other._col_index[i]: other._V[i] for i in range(row_start_other, row_end_other)}
+            row_other = {other.col_index[i]: other.V[i] for i in range(row_start_other, row_end_other)}
             
             row_sum = {}
             for j in row_self:
@@ -149,18 +123,17 @@ class SparseMatrix:
     def edit(self, x, i, j):
         isOccupied = False
         nonZero = False
-        row_start  = self._row_counter[i]
-        row_end  = self._row_counter[i+1]
+        row_start = self._row_counter[i]
+        row_end = self._row_counter[i+1]
         V = self._V
         Col = self._col_index
         Row = self._row_counter
-        
 
         if abs(x) > tol:
             nonZero = True
 
         if j in self._col_index[row_start:row_end]:
-            isOccupied  = True
+            isOccupied = True
         
         if isOccupied and nonZero:
             self._V[j] = x
@@ -200,7 +173,8 @@ class SparseMatrix:
             self._number_of_nonzero += 1
             
         else:
-            #nothing :-)
+            pass
+            # nothing :-)
 
     @staticmethod
     def manual_toeplitz(n: int):
@@ -287,5 +261,3 @@ class SparseMatrix:
         result._intern_represent = 'CSR'
         result._shape = (n, n)
         return result
-
-
