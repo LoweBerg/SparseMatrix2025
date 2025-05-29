@@ -3,8 +3,8 @@ import numpy as np
 import Sparse
 
 
-class TestTask1(unittest.TestCase):
-    def test1(self):
+class TaskTests(unittest.TestCase):
+    def testtask1(self):
         A = np.array([[0, 0, 0, 0],
                       [5, 8, 0, 0],
                       [0, 0, 3, 0],
@@ -16,7 +16,7 @@ class TestTask1(unittest.TestCase):
         self.assertIsNone(np.testing.assert_array_equal(SA.row_counter, np.array([0, 0, 2, 3, 4])))
         self.assertEqual(SA.intern_represent, 'CSR')
 
-    def test3add(self):
+    def testtask3add(self):
         A = np.array([[0, 0, 0, 2, 0],
                       [0, -9, 0, 0, 1],
                       [0, 0, 13, 0, 4],
@@ -31,7 +31,7 @@ class TestTask1(unittest.TestCase):
         self.assertIsNone(np.testing.assert_array_equal(SA.col_index, np.array([1, 3, 1, 4, 2, 4, 2, 4, 0])))
         self.assertIsNone(np.testing.assert_array_equal(SA.row_counter, np.array([0, 2, 4, 6, 8, 9])))
 
-    def test3remove(self):
+    def testtask3remove(self):
         A = np.array([[0, 0, 0, 2, 0],
                       [0, -9, 0, 0, 1],
                       [0, 0, 13, 0, 4],
@@ -45,6 +45,21 @@ class TestTask1(unittest.TestCase):
         self.assertIsNone(np.testing.assert_array_equal(SA.V, np.array([2, -9, 1, 13, 4, -3, 5])))
         self.assertIsNone(np.testing.assert_array_equal(SA.col_index, np.array([3, 1, 4, 2, 4, 2, 0])))
         self.assertIsNone(np.testing.assert_array_equal(SA.row_counter, np.array([0, 1, 3, 5, 6, 7])))
+
+    def testtask3edit(self):
+        A = np.array([[0, 0, 0, 2, 0],
+                      [0, -9, 0, 0, 1],
+                      [0, 0, 13, 0, 4],
+                      [0, 0, -3, 0, 7],
+                      [5, 0, 0, 0, 0]])
+
+        SA = Sparse.SparseMatrix(A)
+
+        SA.edit(-30, 1, 4)  # Stoppar in -30 i position [1, 4]
+        self.assertEqual(SA.number_of_nonzero, 8)
+        self.assertIsNone(np.testing.assert_array_equal(SA.V, np.array([2, -9, -30, 13, 4, -3, 7, 5])))
+        self.assertIsNone(np.testing.assert_array_equal(SA.col_index, np.array([3, 1, 4, 2, 4, 2, 4, 0])))
+        self.assertIsNone(np.testing.assert_array_equal(SA.row_counter, np.array([0, 1, 3, 5, 7, 8])))
 
 
 if __name__ == '__main__':

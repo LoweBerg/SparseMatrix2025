@@ -73,9 +73,9 @@ print("Fast sum: \n", fastsum) #output is good
 # Test task 9
 print("----- Test task 9 -----")
 for i in range(1, 5):
-    print("Slow toeplitz-----------------")
-    SA = Sparse.SparseMatrix.manual_toeplitz(i)
-    print(SA)
-    print("Fast toeplitz-------------")
+    print("Long toeplitz-----------------")
     SA = Sparse.SparseMatrix.toeplitz(i)
+    print(SA)
+    print("Short toeplitz-------------")
+    SA = Sparse.SparseMatrix.short_toeplitz(i)
     print(SA)

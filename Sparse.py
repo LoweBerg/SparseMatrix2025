@@ -177,7 +177,7 @@ class SparseMatrix:
             # nothing :-)
 
     @staticmethod
-    def manual_toeplitz(n: int):
+    def toeplitz(n: int):
         if n < 0:
             raise ValueError("Number of rows must be a positive integer!")
 
@@ -233,7 +233,7 @@ class SparseMatrix:
         return result
 
     @staticmethod
-    def toeplitz(n: int):  # alternative solution
+    def short_toeplitz(n: int):  # alternative solution
         if n < 0:
             raise ValueError("Number of rows must be a positive integer!")
 
