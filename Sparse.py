@@ -29,7 +29,7 @@ class SparseMatrix:
             self._row_counter = np.array(temp_row_counter)
             self._number_of_nonzero = temp_number_of_nonzero
             self._intern_represent = 'CSR'
-            self._shape = (0, 0)
+            self._shape = (0,)
             return
 
         for i in range(arr.shape[0]):
@@ -155,8 +155,8 @@ class SparseMatrix:
             for a in range(i, len(Row)):
                 Row[a] += 1
                 
-            self._col_index = np.concatenate(Col[0:row_start], workCol, Col[row_end:-1])
-            self._V = np.concatenate(V[0:row_start], workV, V[row_end:-1])
+            self._col_index = np.concatenate((Col[0:row_start], workCol, Col[row_end:-1]))
+            self._V = np.concatenate((V[0:row_start], workV, V[row_end:-1]))
             self._row_counter = Row
             self._number_of_nonzero += 1
         
@@ -167,8 +167,8 @@ class SparseMatrix:
             np.delete(workV, j)
             for a in range(i, len(Row)):
                 Row[a] -= 1
-            self._col_index = np.concatenate(Col[0:row_start], workCol, Col[row_end:-1])
-            self._V = np.concatenate(V[0:row_start], workV, V[row_end:-1])
+            self._col_index = np.concatenate((Col[0:row_start], workCol, Col[row_end:-1]))
+            self._V = np.concatenate((V[0:row_start], workV, V[row_end:-1]))
             self._row_counter = Row
             self._number_of_nonzero += 1
             
@@ -189,7 +189,7 @@ class SparseMatrix:
             result._row_counter = np.array([0, 1])
             result._number_of_nonzero = 1
             result._intern_represent = 'CSR'
-            result._shape = (1, 1)
+            result._shape = (1,)
             return result
 
         # Cases where n > 1 are generated procedurally
