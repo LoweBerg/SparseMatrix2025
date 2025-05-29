@@ -28,7 +28,7 @@ class SparseMatrix:
             self._row_counter = np.array(temp_row_counter)
             self._number_of_nonzero = temp_number_of_nonzero
             self._intern_represent = 'CSR'
-            self._shape = np.array([0, 0])
+            self._shape = (0, 0)
             return
 
         for i in range(arr.shape[0]):
@@ -215,7 +215,7 @@ class SparseMatrix:
             result._row_counter = np.array([0, 1])
             result._number_of_nonzero = 1
             result._intern_represent = 'CSR'
-            result._shape = np.array([1, 1])
+            result._shape = (1, 1)
             return result
 
         # Cases where n > 1 are generated procedurally
@@ -255,7 +255,7 @@ class SparseMatrix:
         result._row_counter = np.array(temp_row_counter)
         result._number_of_nonzero = np.array(temp_number_of_nonzero)
         result._intern_represent = 'CSR'
-        result._shape = np.array([n, n])
+        result._shape = (n, n)
         return result
 
     @staticmethod
@@ -271,7 +271,7 @@ class SparseMatrix:
             result._row_counter = np.array([0, 1])
             result._number_of_nonzero = 1
             result._intern_represent = 'CSR'
-            result._shape = np.array([1, 1])
+            result._shape = (1, 1)
             return result
 
         # Freaky generation method
@@ -285,7 +285,7 @@ class SparseMatrix:
         result._row_counter = np.array(temp_row_counter)
         result._number_of_nonzero = np.array(temp_number_of_nonzero)
         result._intern_represent = 'CSR'
-        result._shape = np.array([n, n])
+        result._shape = (n, n)
         return result
 
 
