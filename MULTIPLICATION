@@ -1,0 +1,24 @@
+    
+    def __vec__mul__ (self, arr: np.array):
+    
+        Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
+        New_matrix_list = []    #slicelist post multiplikation
+        
+        for i in range(len(self._col_index)):
+            Vec = arr[self._col_index[i]]
+            Pre_mul.append(Vec)
+
+        Post_mul = self._V * Pre_mul   #unsliced array containing the values V times their matching part of the vector
+
+        for i in range(len(self._row_counter)-1):
+            if self._row_counter[i+1] - self._row_counter[i] != 0:
+                Vslice = Post_mul[self._row_counter[i]:self._row_counter[i+1]]  #splits up the multiplied values to their corresponding row
+                Vlist = Vslice.tolist()                 #and makes every slice be a list so that the contents of every slice can be summed up
+            else:
+                Vlist = [0]
+            V_sum = sum(Vlist)              #sums up each list giving the total worth of one row in the new array
+            New_matrix_list.append(V_sum)
+        
+        New_matrix_array = np.array([New_matrix_list])                 #makes the list an array that can later be converted into a new sparse matrix
+            
+        return New_matrix_array   
