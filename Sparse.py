@@ -146,7 +146,7 @@ class SparseMatrix:
             V_sum = sum(Vlist)              #sums up each list giving the total worth of one row in the new array
             New_matrix_list.append(V_sum)
         
-        New_matrix_array = np.array([New_matrix_list])                 #makes the list an array that can later be converted into a new sparse matrix
+        New_matrix_array = np.array(New_matrix_list)                 #makes the list an array again
             
         return New_matrix_array   
 
