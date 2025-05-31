@@ -1,6 +1,4 @@
 import timeit
-from Sparse import SparseMatrix
-import numpy as np
 import matplotlib.pyplot as plt
 
 x = range(1, 1000)
