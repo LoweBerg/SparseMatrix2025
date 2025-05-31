@@ -80,6 +80,21 @@ class TaskTests(unittest.TestCase):
 
         self.assertIsNone(np.testing.assert_array_equal(SB, B))
 
+        A = np.array([[5, 0, 0, 3, 0, 0, -1, 7, 0, 0, 6],
+                      [0, 0, 0, 4, 0, 1, 0, 0, 13, 0, 0],
+                      [5, 1, 0, 0, 8, 0, 33, 0, 0, 0, 0],
+                      [1, 2, -5, 0, 0, 0, 0, 0, 0, 0, 0]])
+
+        SA = Sparse.SparseMatrix(A)
+
+        vec = np.array([1, 6, 2, 7, 10, 22, -5, 7, 2, 9, -3])
+
+        SB = SA.vec_mul(vec)
+
+        B = A.dot(vec)
+
+        self.assertIsNone(np.testing.assert_array_equal(SB, B))
+
 
 if __name__ == '__main__':
     unittest.main()
