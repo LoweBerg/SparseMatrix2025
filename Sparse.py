@@ -13,7 +13,7 @@ class SparseMatrix:
         row_counter: Number of nonzero elements in a row such that row i contains
         row_counter[i+1] - row_counter[i] elements (0-indexed). \n
         number_of_nonzero: Total number of nonzero elements in matrix. \n
-        intern_represent: Sparse matrix compression format.
+        intern_represent: Sparse matrix compression format. \n
         shape: shape of the uncompressed matrix
 
         :param arr: Numpy sparse matrix to be compressed
@@ -32,8 +32,14 @@ class SparseMatrix:
             self._shape = (0,)
             return
 
-        for i in range(arr.shape[0]):
-            for j in range(arr.shape[1]):
+        if arr.shape[1] is None:
+            rows = 1
+            cols = arr.shape[0]
+        else:
+            rows, cols = arr.shape
+
+        for i in range(rows):
+            for j in range(cols):
                 if abs(arr[i, j]) > tol:
                     temp_number_of_nonzero += 1
                     temp_V.append(arr[i, j])
@@ -120,7 +126,7 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
         
-    def __vec__mul__ (self, arr: np.array):
+    def vec_mul(self, arr: np.array):
     
         Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
         New_matrix_list = []    #slicelist post multiplikation
