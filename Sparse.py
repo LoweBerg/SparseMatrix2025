@@ -120,7 +120,7 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
         
-    def __vec__mul__ (self, arr: np.array):
+    def vec_mul (self, arr: np.array):
     
         Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
         New_matrix_list = []    #slicelist post multiplikation
@@ -140,7 +140,7 @@ class SparseMatrix:
             V_sum = sum(Vlist)              #sums up each list giving the total worth of one row in the new array
             New_matrix_list.append(V_sum)
         
-        New_matrix_array = np.array([New_matrix_list])                 #makes the list an array that can later be converted into a new sparse matrix
+        New_matrix_array = np.array(New_matrix_list)                 #makes the list an array again
             
         return New_matrix_array   
 
