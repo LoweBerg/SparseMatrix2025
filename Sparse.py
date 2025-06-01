@@ -210,13 +210,26 @@ class SparseMatrix:
         return New_matrix_array   
 
     def edit(self, x, i, j):
-        isOccupied = False
+        """
+        Takes in a value x, and a desired position row i and column j in matrix A, where said 
+        value x is to replace whatever value was in that cell before. If x is smaller than the
+        given tolerance tol, it is considered as a zero. If a nonzero is put in a cell containing
+        a zero, or vice versa, the number of nonzero counter is updated accordingly.
+
+        Values can also be added to a cell 'outside' of a matrix A. If the input i or j or both
+        are bigger than matrix A's current shape, the matrix turns into a new matrix B of the 
+        bigger shape with zeroes in the new rows and columns. Also, if a row or column is edited 
+        such that the resulting matrix has an empty (zero filled) outer row or column, its shape
+        is reduced to no store unnecessary zero rows.
+        """
+        
+        isOccupied = False 
         nonZero = False
         
         if abs(x) > tol:
             nonZero = True
         
-        if (i > self._shape[0] - 1):
+        if (i > self._shape[0] - 1): #Handles cases where a value is placed on a row outside of the current shape.
             if not nonZero:
                 return self
             else:
@@ -226,57 +239,49 @@ class SparseMatrix:
                     self._row_counter = np.append(self._row_counter, self._row_counter[-1])
                 self._row_counter[-1] += 1
                 self._number_of_nonzero += 1
-            
-            """if statement for when you add a value to a row that does not exist 
-            in the sparsematrix"""
         
         else:
             row_start  = self._row_counter[i]
             row_end  = self._row_counter[i+1]
             
-            """row_start and row_end is used to extract information from the
-            CSR output. row_start and row_end gives us the information on 
-            how many nonZeros there are on that row and in turn on which 
-            columns said values exist"""
+            if j in self._col_index[row_start:row_end]: #Checks if the cell being changed currently contains a nonzero or not.
+                isOccupied  = True                      #If it contains a nonzero, the cell is considered 'occupied'.
             
-            if j in self._col_index[row_start:row_end]:
-                isOccupied  = True
-            
-            if isOccupied and nonZero:     #case if the cell is occupied and changed to a nonzero
-                workCol = self._col_index[row_start:row_end]
+            if isOccupied and nonZero:     #Occupied cell being changed to a nonzero x
+                workCol = self._col_index[row_start:row_end] #workCol and workV contains all the values and their respective columns in row i.
                 workV = self._V[row_start:row_end]
                 n = 0
-                while j > workCol[n]:     #sorts the new value in the correct spot for Values and column_index
+                while j > workCol[n]:     #Finds the correct spot in workV to replace the value.
                     n += 1
                 workV[n] = x
-                self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
+                self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)])) #Puts the entire value array back togehter
                 
-            elif not isOccupied and nonZero:    #case if the cell is not occupied and changed to a nonzero
+            elif not isOccupied and nonZero:    #Unoccupied cell changed to a nonzero x
                 workCol = self._col_index[row_start:row_end]
                 workV = V[row_start:row_end]
                 
-                if (workCol.size == 0) or (j > np.max(workCol)):
+                if (workCol.size == 0) or (j > np.max(workCol)): #Case if the row is empty or j is the largest index
                     workCol = np.append(workCol, j)
                     workV = np.append(workV, x)
                 else:
                     n = 0
-                    while j > workCol[n]:
+                    while j > workCol[n]: #Finds the correct spot in workCol and workV to add the value and its index.
                         n += 1
                     workCol = np.insert(workCol, n, j)
                     workV = np.insert(workV, n, x)
                 
-                for a in range(i + 1, len(self._row_counter)):     #corrects the row_counter
+                for a in range(i + 1, len(self._row_counter)):     #Corrects the row_counter
                     self._row_counter[a] += 1
                     
                 self._col_index = np.concatenate((Col[0:row_start], workCol, Col[row_end:len(Col)]))
                 self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
-                self._number_of_nonzero += 1      #corrects the NNZ-counter
+                self._number_of_nonzero += 1      #Corrects the NNZ-counter
             
-            elif isOccupied and not nonZero:    #case for when the cell is occupied and changed to a zero 
+            elif isOccupied and not nonZero:    #Occupied cell being chaged to a zero
                 workCol = self._col_index[row_start:row_end]
                 workV = self._V[row_start:row_end]
                 n = 0
-                while j > workCol[n]:
+                while j > workCol[n]: #Finds the correct spot in workCol and workV to remove the value and its index.
                     n += 1
                 workCol = np.delete(workCol, n)
                 workV = np.delete(workV, n)
@@ -286,11 +291,10 @@ class SparseMatrix:
                 self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
                 self._number_of_nonzero -= 1
                 
-            while self._row_counter[-1] == self._row_counter[-2]:   #shortens the row_counter if the last row only has zeros 
+            while self._row_counter[-1] == self._row_counter[-2]:   #Shortens row_counter if the last row(s) only has zeros.
                 self._row_counter = np.delete(self._row_counter, -1)
               
-        self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #reshapes the matrix and removes any column that is empty
-
+        self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #Reshapes the matrix and removes any column that is empty
     @staticmethod
     def toeplitz(n: int):
         if n < 0:
