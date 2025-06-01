@@ -3,7 +3,7 @@ import numpy as np
 import Sparse
 
 
-class TaskTests(unittest.TestCase):
+class TaskTests(unittest.TestCase):  # Written by Lowe Berg
     def testtask1(self):
         A = np.array([[0, 0, 0, 0],
                       [5, 8, 0, 0],
