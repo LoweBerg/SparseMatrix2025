@@ -369,7 +369,7 @@ class SparseMatrix:
                 self._row_counter = np.delete(self._row_counter, -1)
               
         self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #Reshapes the matrix and removes any column that is empty
-        self.convert_for_transition() #Updates CSC representation 
+        #self.convert_for_transition() #Updates CSC representation 
         
     @staticmethod
     def toeplitz(n: int):  # Written by Lowe Berg
