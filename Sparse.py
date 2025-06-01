@@ -133,6 +133,7 @@ class SparseMatrix:
         self._V = np.array(temp_resorted_val)
         self._row_index = np.array(temp_row_index)
         self._col_counter = np.array(temp_col_counter)
+        self._intern_represent = 'transition'
 
     def CSC_conversion(self):
         if self._intern_represent != 'transition' :
