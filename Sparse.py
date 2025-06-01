@@ -156,7 +156,57 @@ class SparseMatrix:
         self._intern_represent = 'CSC'
 
         return self
-    
+        
+    def same_matrix (self, other):
+
+        """
+        Beskrivning yaaaa
+        """
+        
+        if not isinstance(other, SparseMatrix):
+            raise ValueError("It needs to be a sparse matrix in order to compare")
+        
+        List_self_V = self._V.tolist() 
+        List_other_V = other._V.tolist()
+       
+        if self.intern_represent == other.intern_represent:
+            if self.intern_represent == 'CSR':
+                
+                List_self_r_c = self._row_counter.tolist()
+                List_other_r_c = other._row_counter.tolist()
+                
+                List_self_c_i = self._col_index.tolist()
+                List_other_c_i = other._col_index.tolist()
+                
+                return (List_self_V == List_other_V and List_self_r_c == List_other_r_c and List_self_c_i == List_other_c_i)
+            else:
+                
+                List_self_c_c = self._col_counter.tolist()
+                List_other_c_c = other._col_counter.tolist()
+                
+                List_self_r_i = self._row_index.tolist()
+                List_other_r_i = other._row_index.tolist()
+                
+                return (List_self_V == List_other_V and List_self_c_c == List_other_c_c and List_self_r_i == List_other_r_i)
+        
+        
+        if self.intern_represent == "CSR" and other.intern_represent == "CSC":
+            self.CSC_conversion()
+            
+        elif self.intern_represent == "CSC" and other.intern_represent == "CSR":
+            other.CSC_conversion()
+                    
+        else:
+            raise ValueError("Neither are in a CSR or CSC sparse array, I cant compare these")
+        
+        List_self_c_c = self._col_counter.tolist()
+        List_other_c_c = other._col_counter.tolist()
+        
+        List_self_r_i = self._row_index.tolist()
+        List_other_r_i = other._row_index.tolist()
+       
+        return (List_self_V == List_other_V and List_self_c_c == List_other_c_c and List_self_r_i == List_other_r_i)
+        
     def __add__(self, other):
         if self._intern_represent != other.intern_represent:
             raise ValueError("Cannot add matrices with different representations")
@@ -200,7 +250,11 @@ class SparseMatrix:
         return sum
         
     def vec_mul(self, arr: np.array):
-    
+
+        """
+        Beskrivning yaaaa
+        """
+        
         Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
         New_matrix_list = []    #slicelist post multiplikation
         
