@@ -209,7 +209,7 @@ class SparseMatrix:
             
         return New_matrix_array   
 
-    def edit(self, x, i, j):
+    def edit(self, x, i, j): #Written by Herman Plank and ELis Eles
         """
         Takes in a value x, and a desired position row i and column j in matrix A, where said 
         value x is to replace whatever value was in that cell before. If x is smaller than the
