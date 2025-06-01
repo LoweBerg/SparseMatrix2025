@@ -85,7 +85,15 @@ class SparseMatrix:
     @property
     def col_index(self):
         return self._col_index
-
+        
+    @property
+    def row_index(self):
+        return self._row_index
+        
+    @property
+    def col_counter(self):
+        return self._col_counter
+           
     @property
     def row_counter(self):
         return self._row_counter
@@ -157,55 +165,71 @@ class SparseMatrix:
 
         return self
         
+      
+      
     def same_matrix (self, other):
-
+        
+        
         """
-        Beskrivning yaaaa
+        Compares two sparse matrices to check if they are the same. 
+        If the two matrices are of different representations i.e. 
+        CSR and CSC it converts the CSR to CSC.
         """
+        
         
         if not isinstance(other, SparseMatrix):
-            raise ValueError("It needs to be a sparse matrix in order to compare")
+            raise ValueError("Input needs to be a sparse matrix")
         
-        List_self_V = self._V.tolist() 
-        List_other_V = other._V.tolist()
+        self_copy = copy.deepcopy(self)
+        other_copy = copy.deepcopy(other)
        
-        if self.intern_represent == other.intern_represent:
-            if self.intern_represent == 'CSR':
+        if self_copy.intern_represent == other.intern_represent:
+            if self_copy.intern_represent == 'CSR':
                 
-                List_self_r_c = self._row_counter.tolist()
-                List_other_r_c = other._row_counter.tolist()
+                List_self_V = self_copy._V.tolist() 
+                List_other_V = other_copy._V.tolist()
                 
-                List_self_c_i = self._col_index.tolist()
-                List_other_c_i = other._col_index.tolist()
+                List_self_r_c = self_copy._row_counter.tolist()
+                List_other_r_c = other_copy._row_counter.tolist()
+                
+                List_self_c_i = self_copy._col_index.tolist()
+                List_other_c_i = other_copy._col_index.tolist()
                 
                 return (List_self_V == List_other_V and List_self_r_c == List_other_r_c and List_self_c_i == List_other_c_i)
+            
             else:
                 
-                List_self_c_c = self._col_counter.tolist()
-                List_other_c_c = other._col_counter.tolist()
+                List_self_V = self_copy._V.tolist() 
+                List_other_V = other_copy._V.tolist()
                 
-                List_self_r_i = self._row_index.tolist()
+                List_self_c_c = self_copy._col_counter.tolist()
+                List_other_c_c = other_copy._col_counter.tolist()
+                
+                List_self_r_i = self_copy._row_index.tolist()
                 List_other_r_i = other._row_index.tolist()
                 
                 return (List_self_V == List_other_V and List_self_c_c == List_other_c_c and List_self_r_i == List_other_r_i)
         
-        
-        if self.intern_represent == "CSR" and other.intern_represent == "CSC":
-            self.CSC_conversion()
+        elif self_copy.intern_represent == "CSR" and other.intern_represent == "CSC":
+            self_copy.CSC_conversion()
             
-        elif self.intern_represent == "CSC" and other.intern_represent == "CSR":
-            other.CSC_conversion()
+        elif self_copy.intern_represent == "CSC" and other.intern_represent == "CSR":
+            other_copy.CSC_conversion()
                     
         else:
             raise ValueError("Neither are in a CSR or CSC sparse array, I cant compare these")
         
-        List_self_c_c = self._col_counter.tolist()
-        List_other_c_c = other._col_counter.tolist()
+        List_self_V = self_copy._V.tolist() 
+        List_other_V = other_copy._V.tolist()
         
-        List_self_r_i = self._row_index.tolist()
-        List_other_r_i = other._row_index.tolist()
+        List_self_c_c = self_copy._col_counter.tolist()
+        List_other_c_c = other_copy._col_counter.tolist()
+        
+        List_self_r_i = self_copy._row_index.tolist()
+        List_other_r_i = other_copy._row_index.tolist()
        
         return (List_self_V == List_other_V and List_self_c_c == List_other_c_c and List_self_r_i == List_other_r_i)
+       
         
     def __add__(self, other):
         if self._intern_represent != other.intern_represent:
@@ -252,11 +276,11 @@ class SparseMatrix:
     def vec_mul(self, arr: np.array):
 
         """
-        Beskrivning yaaaa
+        Makes it possible to multiply a CSR sparse matrix with a 1 dimensional vector. 
         """
         
         Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
-        New_matrix_list = []    #slicelist post multiplikation
+        New_matrix_list = []    #slicelist post multiplication
         
         for i in range(len(self._col_index)):
             Vec = arr[self._col_index[i]]
