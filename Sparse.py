@@ -4,7 +4,7 @@ tol = 1e-8  # Tolerance for zero values in the matrix
 
 
 class SparseMatrix:
-    def __init__(self, arr: np.ndarray = None):  # Sparsify matrix
+    def __init__(self, arr: np.ndarray = None):  # Written by Lowe Berg
         """
         Generates a Sparse Matrix using the Compressed Sparse Row (CSR) format
         with the following properties: \n
@@ -54,7 +54,7 @@ class SparseMatrix:
         self._intern_represent = 'CSR'
         self._shape = arr.shape  # jag lade till denna /RS
 
-    def __repr__(self):
+    def __repr__(self):  # Written by Lowe Berg and Amanda Bjerge Andersson
         if self._intern_represent == 'CSR':
             return(
                     f"""
@@ -371,8 +371,8 @@ class SparseMatrix:
         self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #Reshapes the matrix and removes any column that is empty
         self.convert_for_transition() #Updates CSC representation 
         
-        @staticmethod
-    def toeplitz(n: int):
+    @staticmethod
+    def toeplitz(n: int):  # Written by Lowe Berg
         """
         Generates a CSR matrix with n rows where the first diagonal is filled with 2 and the adjacent
         diagonals contain -1
@@ -434,7 +434,7 @@ class SparseMatrix:
         return result
 
     @staticmethod
-    def short_toeplitz(n: int):  # alternative solution
+    def short_toeplitz(n: int):  # alternative solution. Written by Lowe Berg
         """
             Generates a CSR matrix with n rows where the first diagonal is filled with 2 and the adjacent
             diagonals contain -1. Shorter version of the toeplitz function to perform the same task.
