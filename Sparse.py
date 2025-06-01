@@ -332,7 +332,7 @@ class SparseMatrix:
                 
             elif not isOccupied and nonZero:    #Unoccupied cell changed to a nonzero x
                 workCol = self._col_index[row_start:row_end]
-                workV = V[row_start:row_end]
+                workV = self._V[row_start:row_end]
                 
                 if (workCol.size == 0) or (j > np.max(workCol)): #Case if the row is empty or j is the largest index
                     workCol = np.append(workCol, j)
