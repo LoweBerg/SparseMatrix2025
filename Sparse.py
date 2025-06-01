@@ -243,6 +243,12 @@ class SparseMatrix:
 
     @staticmethod
     def toeplitz(n: int):
+        """
+        Generates a CSR matrix with n rows where the first diagonal is filled with 2 and the adjacent
+        diagonals contain -1
+        :param n: number of rows in matrix
+        :return: SparseMatrix object
+        """
         if n < 0:
             raise ValueError("Number of rows must be a positive integer!")
 
@@ -299,6 +305,12 @@ class SparseMatrix:
 
     @staticmethod
     def short_toeplitz(n: int):  # alternative solution
+        """
+            Generates a CSR matrix with n rows where the first diagonal is filled with 2 and the adjacent
+            diagonals contain -1. Shorter version of the toeplitz function to perform the same task.
+            :param n: number of rows in matrix
+            :return: SparseMatrix object
+        """
         if n < 0:
             raise ValueError("Number of rows must be a positive integer!")
 
