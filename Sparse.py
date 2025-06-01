@@ -157,9 +157,6 @@ class SparseMatrix:
     def edit(self, x, i, j):
         isOccupied = False
         nonZero = False
-        V = self._V
-        Col = self._col_index
-        Row = self._row_counter
         
         if abs(x) > tol:
             nonZero = True
@@ -191,8 +188,8 @@ class SparseMatrix:
                 isOccupied  = True
             
             if isOccupied and nonZero:     #case if the cell is occupied and changed to a nonzero
-                workCol = Col[row_start:row_end]
-                workV = V[row_start:row_end]
+                workCol = self._col_index[row_start:row_end]
+                workV = self._V[row_start:row_end]
                 n = 0
                 while j > workCol[n]:     #sorts the new value in the correct spot for Values and column_index
                     n += 1
@@ -200,7 +197,7 @@ class SparseMatrix:
                 self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
                 
             elif not isOccupied and nonZero:    #case if the cell is not occupied and changed to a nonzero
-                workCol = Col[row_start:row_end]
+                workCol = self._col_index[row_start:row_end]
                 workV = V[row_start:row_end]
                 
                 if (workCol.size == 0) or (j > np.max(workCol)):
@@ -213,27 +210,25 @@ class SparseMatrix:
                     workCol = np.insert(workCol, n, j)
                     workV = np.insert(workV, n, x)
                 
-                for a in range(i + 1, len(Row)):     #corrects the row_counter
-                    Row[a] += 1
+                for a in range(i + 1, len(self._row_counter)):     #corrects the row_counter
+                    self._row_counter[a] += 1
                     
                 self._col_index = np.concatenate((Col[0:row_start], workCol, Col[row_end:len(Col)]))
                 self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
-                self._row_counter = Row
                 self._number_of_nonzero += 1      #corrects the NNZ-counter
             
             elif isOccupied and not nonZero:    #case for when the cell is occupied and changed to a zero 
-                workCol = Col[row_start:row_end]
-                workV = V[row_start:row_end]
+                workCol = self._col_index[row_start:row_end]
+                workV = self._V[row_start:row_end]
                 n = 0
                 while j > workCol[n]:
                     n += 1
                 workCol = np.delete(workCol, n)
                 workV = np.delete(workV, n)
-                for a in range(i + 1, len(Row)):
-                    Row[a] -= 1
+                for a in range(i + 1, len(self._row_counter)):
+                    self._row_counter[a] -= 1
                 self._col_index = np.concatenate((Col[0:row_start], workCol, Col[row_end:len(Col)]))
                 self._V = np.concatenate((V[0:row_start], workV, V[row_end:len(V)]))
-                self._row_counter = Row
                 self._number_of_nonzero -= 1
                 
             while self._row_counter[-1] == self._row_counter[-2]:   #shortens the row_counter if the last row only has zeros 
