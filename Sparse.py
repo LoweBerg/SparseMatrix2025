@@ -83,6 +83,10 @@ class SparseMatrix:
     @property
     def intern_represent(self):
         return self._intern_represent
+
+    @property
+    def shape(self):
+        return self._shape
     
     def __add__(self, other):
         if self._intern_represent != other.intern_represent:
