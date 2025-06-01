@@ -236,6 +236,12 @@ class SparseMatrix:
         such that the resulting matrix has an empty (zero filled) outer row or column, its shape
         is reduced to no store unnecessary zero rows.
         """
+
+        if i < 0 or j < 0:
+            raise ValueError('Indices must be positive integers')
+
+        if i % 1 != 0 or j % 1 != 0:
+            raise TypeError('Indices must be positive integers')
         
         isOccupied = False 
         nonZero = False
@@ -309,7 +315,9 @@ class SparseMatrix:
                 self._row_counter = np.delete(self._row_counter, -1)
               
         self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #Reshapes the matrix and removes any column that is empty
-    @staticmethod
+        self.convert_for_transition() #Updates CSC representation 
+        
+        @staticmethod
     def toeplitz(n: int):
         """
         Generates a CSR matrix with n rows where the first diagonal is filled with 2 and the adjacent
