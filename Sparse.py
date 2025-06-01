@@ -55,14 +55,24 @@ class SparseMatrix:
         self._shape = arr.shape  # jag lade till denna /RS
 
     def __repr__(self):
-        return(
-            f"""
-            NNZ: {self._number_of_nonzero}
-            Values: {self._V}
-            Columns: {self._col_index}
-            Row Counter: {self._row_counter}
-            """
-               )
+        if self._intern_represent == 'CSR':
+            return(
+                    f"""
+                    NNZ: {self._number_of_nonzero}
+                    Values: {self._V}
+                    Row Counter: {self._row_counter}
+                    Column index: {self._col_index}
+                    """
+                )
+        if self._intern_represent == 'CSC':
+            return(
+                    f"""
+                    NNZ: {self._number_of_nonzero}
+                    Values: {self._V}
+                    Column Counter: {self._col_counter}
+                    Row index: {self._row_index}
+                    """
+                )
 
     @property
     def number_of_nonzero(self):
@@ -87,6 +97,50 @@ class SparseMatrix:
     @property
     def shape(self):
         return self._shape
+
+    def convert_for_transition(self):      # separate transition format that contains both col- and row indices/counters
+        # create col_counter
+        n = self._shape[1]+1              # column length +1 to account for intial 0
+        temp_col_counter = [0]*n          
+        for i in range(len(self._col_index)):
+            for col in range(self._col_index[i]+1, n):
+                temp_col_counter[col] += 1         # adds one count to each element from and including the current index
+
+        # create row_index
+        temp_row_index = [0]*len(self._V)
+        positions = temp_col_counter[:]       # slicing to make a copy to not change col_counter
+
+        for row in range(len(self._row_counter)-1):
+            for sans in range(self._row_counter[row], self._row_counter[row + 1]):
+                col = self._col_index[sans]
+                pos = positions[col]
+                temp_row_index[pos] = row
+                positions[col] += 1
+
+        # reshuffle values to csc order
+        temp_remapping = []         # list for remapped values to respective column indices
+        temp_resorted_val = []
+        for i in range(self._number_of_nonzero): 
+            temp_remapping.append((self._V[i], self._col_index[i]))
+
+        temp_remapping = sorted(temp_remapping, key= lambda x: x[1])
+                # sorts the remapped values by number, referring to the column indexes
+
+        for i in range(len(temp_remapping)):
+            temp_resorted_val.append(temp_remapping[i][0])  # separates the now reshuffled values
+
+        # compiling new arrays
+        self._V = np.array(temp_resorted_val)
+        self._row_index = np.array(temp_row_index)
+        self._col_counter = np.array(temp_col_counter)
+
+    def CSC_conversion(self):
+        if self._intern_represent != 'transition' :
+            self.convert_for_transition()
+
+        self._intern_represent = 'CSC'
+
+        return self
     
     def __add__(self, other):
         if self._intern_represent != other.intern_represent:
