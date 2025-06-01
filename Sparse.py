@@ -328,7 +328,7 @@ class SparseMatrix:
                 while j > workCol[n]:     #Finds the correct spot in workV to replace the value.
                     n += 1
                 workV[n] = x
-                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(V)])) #Puts the entire value array back togehter
+                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(self._V)])) #Puts the entire value array back togehter
                 
             elif not isOccupied and nonZero:    #Unoccupied cell changed to a nonzero x
                 workCol = self._col_index[row_start:row_end]
@@ -347,8 +347,8 @@ class SparseMatrix:
                 for a in range(i + 1, len(self._row_counter)):     #Corrects the row_counter
                     self._row_counter[a] += 1
                     
-                self._col_index = np.concatenate((self._col_index[0:row_start], workCol, self._col_index[row_end:len(Col)]))
-                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(V)]))
+                self._col_index = np.concatenate((self._col_index[0:row_start], workCol, self._col_index[row_end:len(self._col_index)]))
+                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(self._V)]))
                 self._number_of_nonzero += 1      #Corrects the NNZ-counter
             
             elif isOccupied and not nonZero:    #Occupied cell being chaged to a zero
@@ -361,8 +361,8 @@ class SparseMatrix:
                 workV = np.delete(workV, n)
                 for a in range(i + 1, len(self._row_counter)):
                     self._row_counter[a] -= 1
-                self._col_index = np.concatenate((self._col_index[0:row_start], workCol, self._col_index[row_end:len(Col)]))
-                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(V)]))
+                self._col_index = np.concatenate((self._col_index[0:row_start], workCol, self._col_index[row_end:len(self._col_index)]))
+                self._V = np.concatenate((self._V[0:row_start], workV, self._V[row_end:len(self._V)]))
                 self._number_of_nonzero -= 1
                 
             while self._row_counter[-1] == self._row_counter[-2]:   #Shortens row_counter if the last row(s) only has zeros.
