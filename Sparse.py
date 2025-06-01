@@ -178,7 +178,7 @@ class SparseMatrix:
         
         
         if not isinstance(other, SparseMatrix):
-            raise ValueError("Input needs to be a sparse matrix")
+            raise TypeError("Input needs to be a sparse matrix")
         
         self_copy = copy.deepcopy(self)
         other_copy = copy.deepcopy(other)
@@ -278,6 +278,16 @@ class SparseMatrix:
         """
         Makes it possible to multiply a CSR sparse matrix with a 1 dimensional vector. 
         """
+
+        if not isinstance(arr, np.ndarray):
+            raise TypeError("You need to input a vector to be able to use this method")
+    
+        if self.shape[1] != arr.shape[0]:
+            raise ValueError("The sparse matrix and the vector do not have the right dimensions")
+    
+        if self.intern_represent != 'CSR':
+            raise TypeError("The sparse vector needs have CSR format")
+            
         
         Pre_mul = []    #every columb index has a corresponding value in the multiplier vector which is stored in Pre_mul
         New_matrix_list = []    #slicelist post multiplication
