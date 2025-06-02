@@ -1,7 +1,7 @@
 # Contains the SparseMatrix object
 import numpy as np
+import copy
 tol = 1e-8  # Tolerance for zero values in the matrix
-
 
 class SparseMatrix:
     def __init__(self, arr: np.ndarray = None):  # Written by Lowe Berg
