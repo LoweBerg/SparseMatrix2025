@@ -106,7 +106,7 @@ class SparseMatrix:
     def shape(self):
         return self._shape
 
-    def convert_for_transition(self):      # separate transition format that contains both col- and row indices/counters
+    def convert_for_transition(self):      # Written by Amanda Bjerge Andersson
         """
         Converts a given sparse matrix from CSR (Compressed Sparse Row) to
         our own transition format. This contains the information found in both
@@ -150,7 +150,7 @@ class SparseMatrix:
         self._col_counter = np.array(temp_col_counter)
         self._intern_represent = 'transition'
 
-    def CSC_conversion(self):
+    def CSC_conversion(self):        # Written by Amanda Bjerge Andersson
         """
         Checks if the given sparse matrix has been converted to the transition
         format. If not, it converts it using the convert_for_transition() 
