@@ -330,6 +330,9 @@ class SparseMatrix:
 
         if i % 1 != 0 or j % 1 != 0:
             raise TypeError('Indices must be positive integers')
+
+        if self._intern_represent == 'CSC':
+            raise TypeError('We didn't have time to allow for editing matrices in CSC-form')
         
         isOccupied = False 
         nonZero = False
@@ -403,9 +406,6 @@ class SparseMatrix:
                 self._row_counter = np.delete(self._row_counter, -1)
               
         self._shape = (np.size(self._row_counter) - 1, int(np.max(self._col_index)) + 1)    #Reshapes the matrix and removes any column that is empty
-        
-        if self._intern_represent == 'CSC':
-            self.convert_for_transition() #Updates CSC representation 
         
     @staticmethod
     def toeplitz(n: int):  # Written by Lowe Berg
