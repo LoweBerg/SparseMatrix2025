@@ -167,7 +167,7 @@ class SparseMatrix:
         
       
       
-    def same_matrix (self, other):
+    def same_matrix (self, other):    # Written by Freja Ockell
         
         
         """
@@ -273,7 +273,7 @@ class SparseMatrix:
         sum._shape = self._shape
         return sum
         
-    def vec_mul(self, arr: np.array):
+    def vec_mul(self, arr: np.array):    # Written by Freja Ockell
 
         """
         Makes it possible to multiply a CSR sparse matrix with a 1 dimensional vector. 
